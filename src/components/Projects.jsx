@@ -1,171 +1,161 @@
 import { useMemo, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { MapPin, BadgeCheck } from 'lucide-react';
+import { MapPin, Building2, Home, Layers, Filter } from 'lucide-react';
 
 const PROJECTS = [
   {
-    id: 'bayview',
-    name: 'Bayview Residences',
+    id: 'aurum-heights',
+    name: 'Aurum Heights',
     type: 'Residential',
     status: 'Completed',
-    location: 'Waterfront, Mumbai',
-    priceBand: 'Premium',
+    location: 'Indiranagar',
+    price: '2-3 Cr',
     year: 2022,
-    metric: '240 Units',
+    metric: '120 Units',
     badge: 'Ready to Move',
-    image:
-      'https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1600&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop',
   },
   {
-    id: 'arcade',
-    name: 'Arcade Square',
+    id: 'nova-plaza',
+    name: 'Nova Plaza',
     type: 'Commercial',
-    status: 'Ongoing',
-    location: 'Business Bay, Pune',
-    priceBand: 'Mid',
-    year: 2025,
-    metric: '320k sq.ft',
-    badge: 'Phase 2 Sales',
-    image:
-      'https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?q=80&w=1600&auto=format&fit=crop',
-  },
-  {
-    id: 'aurora',
-    name: 'Aurora One',
-    type: 'Mixed',
     status: 'Completed',
-    location: 'Gachibowli, Hyderabad',
-    priceBand: 'Luxury',
+    location: 'MG Road',
+    price: '4-6 Cr',
     year: 2021,
-    metric: '180 Units',
-    badge: 'RERA Certified',
-    image:
-      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop',
+    metric: '240k sq.ft',
+    badge: 'Leased',
+    image: 'https://images.unsplash.com/photo-1469796466635-455ede028aca?q=80&w=1600&auto=format&fit=crop',
   },
   {
-    id: 'grove',
-    name: 'The Grove',
+    id: 'solace-meadows',
+    name: 'Solace Meadows',
     type: 'Residential',
     status: 'Ongoing',
-    location: 'Whitefield, Bengaluru',
-    priceBand: 'Upper Mid',
+    location: 'Whitefield',
+    price: '1-2 Cr',
+    year: 2025,
+    metric: '90 Units',
+    badge: 'New Launch',
+    image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=1600&auto=format&fit=crop',
+  },
+  {
+    id: 'vertex-mix',
+    name: 'Vertex District',
+    type: 'Mixed',
+    status: 'Ongoing',
+    location: 'Hebbal',
+    price: '2-5 Cr',
     year: 2026,
-    metric: '110 Villas',
-    badge: 'Launching',
-    image:
-      'https://images.unsplash.com/photo-1502003148287-a82ef80a6abc?q=80&w=1600&auto=format&fit=crop',
+    metric: 'Residences + Retail',
+    badge: 'Now Booking',
+    image: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1600&auto=format&fit=crop',
   },
 ];
 
-const FILTERS = {
-  type: ['All', 'Residential', 'Commercial', 'Mixed'],
-  status: ['All', 'Completed', 'Ongoing'],
-  location: ['All', 'Mumbai', 'Pune', 'Hyderabad', 'Bengaluru'],
-  priceBand: ['All', 'Mid', 'Upper Mid', 'Premium', 'Luxury'],
-};
+const TYPES = ['All', 'Residential', 'Commercial', 'Mixed'];
+const STATUS = ['All', 'Completed', 'Ongoing'];
+const LOCATIONS = ['All', 'Indiranagar', 'MG Road', 'Whitefield', 'Hebbal'];
+const PRICE = ['All', '1-2 Cr', '2-3 Cr', '4-6 Cr'];
 
-export default function Projects() {
-  const [filters, setFilters] = useState({
-    type: 'All',
-    status: 'All',
-    location: 'All',
-    priceBand: 'All',
-  });
-  const prefersReducedMotion = useReducedMotion();
+const Projects = () => {
+  const [type, setType] = useState('All');
+  const [status, setStatus] = useState('All');
+  const [location, setLocation] = useState('All');
+  const [price, setPrice] = useState('All');
+  const shouldReduceMotion = useReducedMotion();
 
   const filtered = useMemo(() => {
-    return PROJECTS.filter((p) => {
-      const matchType = filters.type === 'All' || p.type === filters.type;
-      const matchStatus = filters.status === 'All' || p.status === filters.status;
-      const matchLocation =
-        filters.location === 'All' || p.location.toLowerCase().includes(filters.location.toLowerCase());
-      const matchPrice = filters.priceBand === 'All' || p.priceBand === filters.priceBand;
-      return matchType && matchStatus && matchLocation && matchPrice;
-    });
-  }, [filters]);
+    return PROJECTS.filter(p =>
+      (type === 'All' || p.type === type) &&
+      (status === 'All' || p.status === status) &&
+      (location === 'All' || p.location === location) &&
+      (price === 'All' || p.price === price)
+    );
+  }, [type, status, location, price]);
 
   return (
-    <section id="projects" className="relative py-16 md:py-24 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div className="md:flex items-end justify-between gap-8 mb-8">
+    <section id="projects" className="relative bg-slate-50 py-20">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900">
-              Projects
-            </h2>
-            <p className="mt-2 text-slate-600 max-w-2xl">
-              Explore our residential, commercial and mixed-use developments. Filter by type,
-              status, location and price band.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-semibold text-slate-900">Featured Projects</h2>
+            <p className="mt-2 text-slate-600">Explore by type, status, location, and price band.</p>
           </div>
+          <div className="flex items-center gap-2 text-slate-600"><Filter className="h-4 w-4" /> Filters</div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-10">
-          {Object.entries(FILTERS).map(([key, values]) => (
-            <select
-              key={key}
-              value={filters[key]}
-              onChange={(e) => setFilters({ ...filters, [key]: e.target.value })}
-              className="appearance-none rounded-lg border border-slate-200 bg-white/90 px-3 py-2.5 text-sm text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300/60"
-            >
-              {values.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          ))}
+        {/* Filters */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+          <select aria-label="Filter by type" value={type} onChange={e => setType(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
+            {TYPES.map(t => <option key={t}>{t}</option>)}
+          </select>
+          <select aria-label="Filter by status" value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
+            {STATUS.map(s => <option key={s}>{s}</option>)}
+          </select>
+          <select aria-label="Filter by location" value={location} onChange={e => setLocation(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
+            {LOCATIONS.map(l => <option key={l}>{l}</option>)}
+          </select>
+          <select aria-label="Filter by price" value={price} onChange={e => setPrice(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400">
+            {PRICE.map(p => <option key={p}>{p}</option>)}
+          </select>
         </div>
 
-        <motion.div
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((p, idx) => (
-            <motion.article
+            <motion.a
               key={p.id}
-              layout
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
+              href="#contact"
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+              whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.4, delay: idx * 0.05 }}
-              className="group overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 hover:shadow-xl transition-shadow"
+              className="group overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 hover:shadow-md transition-shadow"
             >
               <div className="relative aspect-[16/10] overflow-hidden">
                 <img
-                  src={p.image}
+                  src={`${p.image}&ixlib=rb-4.0.3`}
                   alt={p.name}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
-                {p.badge && (
-                  <span className="absolute left-3 top-3 rounded-full bg-emerald-600 text-white text-xs font-medium px-2.5 py-1 shadow">
-                    {p.badge}
-                  </span>
-                )}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                <span className="absolute left-3 top-3 rounded-full bg-emerald-500/95 px-3 py-1 text-xs font-medium text-white shadow">{p.badge}</span>
               </div>
-              <div className="p-5">
-                <div className="flex items-center justify-between gap-3">
+              <div className="p-4">
+                <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-slate-900">{p.name}</h3>
-                  <span className="text-xs rounded-full bg-slate-100 px-2 py-1 text-slate-600">
-                    {p.type}
-                  </span>
+                  <span className="text-xs rounded bg-slate-100 px-2 py-1 text-slate-600">{p.type}</span>
                 </div>
-                <div className="mt-2 flex items-center gap-2 text-slate-600 text-sm">
-                  <MapPin className="size-4" />
-                  <span>{p.location}</span>
+                <div className="mt-2 flex items-center gap-3 text-sm text-slate-600">
+                  <span className="inline-flex items-center gap-1"><MapPin className="h-4 w-4" /> {p.location}</span>
+                  <span className="inline-flex items-center gap-1"><Layers className="h-4 w-4" /> {p.metric}</span>
                 </div>
-                <div className="mt-3 flex items-center justify-between text-sm text-slate-700">
-                  <span>{p.year}</span>
-                  <span className="inline-flex items-center gap-1"><BadgeCheck className="size-4 text-amber-600" />{p.metric}</span>
+                <div className="mt-2 flex items-center justify-between text-sm text-slate-500">
+                  <span>{p.status} · {p.year}</span>
+                  <span>{p.price}</span>
                 </div>
-                <button className="mt-4 w-full rounded-lg bg-slate-900 text-white py-2.5 text-sm font-semibold hover:bg-slate-800 transition">
-                  View Details
-                </button>
               </div>
-            </motion.article>
+            </motion.a>
           ))}
-        </motion.div>
+        </div>
+
+        {/* CTA banner */}
+        <div className="mt-12 overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 p-6 text-white">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h3 className="text-xl font-semibold">Looking for something specific?</h3>
+              <p className="text-slate-300">Tell us your requirements and we’ll share tailored options.</p>
+            </div>
+            <a href="#contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-500 px-5 py-3 font-medium text-slate-900 shadow hover:bg-amber-400">
+              <Building2 className="h-4 w-4" /> Enquire Now
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
-}
+};
+
+export default Projects;
